@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脆皮大學生生存檢測｜尋找你的命定 Logitech 神隊友</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cream: #EDE8DC;
+            --ink: #111111;
+            --coral: #F26D50;
+            --mint: #69D2CD;
+            --blush: #F7C6BE;
+            --paper: #FFFFFF;
+            --font-sans: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            --font-mono: "JetBrains Mono", "Noto Sans TC", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--cream);
+            color: var(--ink);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background-color: var(--mint);
+            color: var(--ink);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* 背景大型純白有機圓弧色塊 */
+        .bg-blob {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 雙層錯位黑框白底視窗 */
+        .double-window {
+            position: relative;
+            background-color: var(--paper);
+            border: 2.5px solid var(--ink);
+            z-index: 10;
+        }
+        .double-window::after {
+            content: "";
+            position: absolute;
+            top: 9px;
+            left: -9px;
+            right: 9px;
+            bottom: -9px;
+            background-color: var(--paper);
+            border: 2.5px solid var(--ink);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* 撞色矩形黑框標籤貼紙 */
+        .sticker-coral {
+            background-color: var(--coral);
+            color: var(--paper);
+            border: 2.5px solid var(--ink);
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            box-shadow: 2px 2px 0px var(--ink);
+        }
+        .sticker-mint {
+            background-color: var(--mint);
+            color: var(--ink);
+            border: 2.5px solid var(--ink);
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            box-shadow: 2px 2px 0px var(--ink);
+        }
+
+        /* 實體按壓按鈕 */
+        .press-btn {
+            border: 2.5px solid var(--ink);
+            box-shadow: 4px 4px 0px var(--ink);
+            font-family: var(--font-sans);
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease, color 0.15s ease;
+        }
+        .press-btn:hover:not(:disabled) {
+            transform: translate(-1px, -1px);
+            box-shadow: 5px 5px 0px var(--ink);
+        }
+        .press-btn:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px var(--ink);
+        }
+        .press-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .btn-coral { background-color: var(--coral); color: var(--paper); }
+        .btn-coral:hover:not(:disabled) { background-color: var(--mint); color: var(--ink); }
+        .btn-white { background-color: var(--paper); color: var(--ink); }
+        .btn-white:hover:not(:disabled) { background-color: var(--mint); }
+        .btn-mint { background-color: var(--mint); color: var(--ink); }
+        .btn-mint:hover:not(:disabled) { background-color: var(--coral); color: var(--paper); }
+        .btn-cream { background-color: var(--cream); color: var(--ink); }
+        .btn-cream:hover:not(:disabled) { background-color: var(--paper); }
+
+        /* 頂部與底部版面 */
+        .site-header {
+            width: 100%;
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 20px 20px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 20;
+        }
+        .brand-badge {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .brand-tag {
+            background-color: var(--ink);
+            color: var(--paper);
+            padding: 3px 8px;
+            font-size: 0.75rem;
+        }
+
+        .main-stage {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 20px;
+            z-index: 10;
+        }
+
+        /* 首頁雙欄網格 */
+        .hero-wrap {
+            width: 100%;
+            max-width: 980px;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+            align-items: center;
+        }
+        @media (min-width: 900px) {
+            .hero-grid {
+                grid-template-columns: 7fr 5fr;
+                gap: 20px;
+            }
+        }
+        .hero-left {
+            padding: 16px 6px 16px 12px;
+        }
+        .hero-window {
+            padding: 38px 28px 42px;
+            text-align: center;
+        }
+        .hero-top-sticker {
+            position: absolute;
+            top: -18px;
+            left: 28px;
+            padding: 4px 16px;
+            font-size: 0.95rem;
+        }
+        .hero-scroll-icon {
+            position: absolute;
+            top: -42px;
+            right: 22px;
+            width: 72px;
+            height: 72px;
+            animation: gentleFloat 3.4s ease-in-out infinite;
+        }
+        .hero-bracket-sub {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
+        }
+        .hero-title {
+            font-size: clamp(2.1rem, 5vw, 3.35rem);
+            font-weight: 900;
+            letter-spacing: 0.06em;
+            line-height: 1.18;
+            margin: 8px 0 12px;
+        }
+        .hero-desc {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: rgba(17, 17, 17, 0.78);
+            line-height: 1.65;
+        }
+        .hero-desc span {
+            text-decoration: underline;
+            text-decoration-color: var(--coral);
+            text-decoration-thickness: 2.5px;
+        }
+        .hero-bottom-sticker {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 4px 20px;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        .hero-actions {
+            margin-top: 34px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 0 4px;
+        }
+        .report-label {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: 0.06em;
+        }
+        .start-btn {
+            padding: 14px 30px;
+            font-size: 1.08rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hero-right {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .hero-char-box {
+            width: 100%;
+            max-width: 330px;
+        }
+
+        /* 測驗問答頁 */
+        .quiz-wrap {
+            width: 100%;
+            max-width: 680px;
+            padding: 14px 4px 14px 12px;
+        }
+        .quiz-window {
+            padding: 34px 26px 28px;
+        }
+        .quiz-top-sticker {
+            position: absolute;
+            top: -16px;
+            left: 24px;
+            padding: 4px 14px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        .quiz-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.82rem;
+            margin-top: 6px;
+            margin-bottom: 12px;
+        }
+        .step-bars {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 26px;
+        }
+        .step-bar {
+            height: 12px;
+            border: 2px solid var(--ink);
+            background-color: var(--cream);
+            transition: background-color 0.25s ease;
+        }
+        .step-bar.active {
+            background-color: var(--mint);
+        }
+        .question-title {
+            font-size: clamp(1.2rem, 3vw, 1.52rem);
+            font-weight: 900;
+            line-height: 1.45;
+            margin-bottom: 22px;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+        .option-item {
+            width: 100%;
+            text-align: left;
+            padding: 15px 16px;
+            background-color: var(--paper);
+            border: 2.5px solid var(--ink);
+            box-shadow: 4px 4px 0px var(--ink);
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            cursor: pointer;
+            font-family: var(--font-sans);
+            transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.12s ease;
+        }
+        .option-item:hover {
+            background-color: #FAF8F5;
+            transform: translate(-1px, -1px);
+            box-shadow: 5px 5px 0px var(--ink);
+        }
+        .option-item.selected {
+            background-color: var(--mint);
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px var(--ink);
+        }
+        .option-key {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--ink);
+            background-color: var(--cream);
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .option-item.selected .option-key {
+            background-color: var(--ink);
+            color: var(--paper);
+        }
+        .option-text {
+            font-size: 0.96rem;
+            font-weight: 700;
+            line-height: 1.48;
+            color: var(--ink);
+        }
+        .quiz-footer {
+            margin-top: 26px;
+            padding-top: 16px;
+            border-top: 2px solid rgba(17, 17, 17, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        /* 結果報告頁 */
+        .result-wrap {
+            width: 100%;
+            max-width: 960px;
+            padding: 16px 4px 16px 12px;
+        }
+        .result-window {
+            padding: 36px 28px 34px;
+            margin-bottom: 28px;
+        }
+        .result-top-sticker {
+            position: absolute;
+            top: -16px;
+            left: 26px;
+            padding: 4px 16px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+        }
+        .crisp-badge-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+        .crisp-badge {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.85rem;
+            background-color: var(--cream);
+            border: 2px solid var(--ink);
+            padding: 4px 12px;
+        }
+        .result-top-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            align-items: center;
+            padding-bottom: 24px;
+            border-bottom: 2.5px solid var(--ink);
+        }
+        @media (min-width: 768px) {
+            .result-top-grid {
+                grid-template-columns: 7fr 5fr;
+            }
+        }
+        .res-subtitle {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.88rem;
+            color: var(--coral);
+            margin-bottom: 6px;
+        }
+        .res-title {
+            font-size: clamp(1.65rem, 4vw, 2.35rem);
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 14px;
+        }
+        .res-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .res-tag-pill {
+            padding: 4px 10px;
+            background-color: var(--cream);
+            border: 2px solid var(--ink);
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.78rem;
+        }
+        .res-desc {
+            font-size: 0.96rem;
+            font-weight: 700;
+            line-height: 1.72;
+            color: rgba(17, 17, 17, 0.86);
+        }
+        .res-char-frame {
+            width: 210px;
+            height: 210px;
+            margin: 0 auto;
+            background-color: var(--cream);
+            border: 2.5px solid var(--ink);
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 同品項雙層級產品推薦對決區 */
+        .gear-section {
+            padding-top: 24px;
+        }
+        .gear-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 22px;
+        }
+        .gear-compare-badge {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.8rem;
+            background-color: var(--ink);
+            color: var(--paper);
+            padding: 4px 10px;
+        }
+        .gear-cards-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 22px;
+        }
+        @media (min-width: 768px) {
+            .gear-cards-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+        }
+        .gear-tier-card {
+            position: relative;
+            background-color: var(--cream);
+            border: 2.5px solid var(--ink);
+            box-shadow: 4px 4px 0px var(--ink);
+            padding: 26px 18px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.12s ease, box-shadow 0.12s ease;
+        }
+        .gear-tier-card:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 6px 6px 0px var(--ink);
+        }
+        .tier-sticker {
+            position: absolute;
+            top: -15px;
+            left: 16px;
+            padding: 3px 12px;
+            font-size: 0.8rem;
+        }
+        .gear-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .gear-info {
+            flex: 1;
+        }
+        .gear-series {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--coral);
+            margin-bottom: 4px;
+        }
+        .gear-name {
+            font-size: 1.15rem;
+            font-weight: 900;
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+        .gear-price-tag {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 800;
+            background-color: var(--paper);
+            border: 1.5px solid var(--ink);
+            padding: 2px 8px;
+        }
+        .gear-visual-link {
+            width: 112px;
+            height: 92px;
+            background-color: var(--paper);
+            border: 2px solid var(--ink);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            overflow: hidden;
+            position: relative;
+            text-decoration: none;
+            transition: transform 0.12s ease;
+        }
+        .gear-visual-link:hover {
+            transform: scale(1.03);
+        }
+        .gear-visual-link img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .gear-desc {
+            font-size: 0.88rem;
+            font-weight: 700;
+            line-height: 1.6;
+            color: rgba(17, 17, 17, 0.84);
+            margin-bottom: 16px;
+        }
+        .gear-cta-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--ink);
+            box-shadow: 3px 3px 0px var(--ink);
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.82rem;
+            text-decoration: none;
+            color: var(--ink);
+            background-color: var(--paper);
+            transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+        }
+        .gear-cta-btn:hover {
+            background-color: var(--ink);
+            color: var(--paper);
+            transform: translate(-1px, -1px);
+        }
+        .gear-cta-btn.flagship-btn {
+            background-color: var(--coral);
+            color: var(--paper);
+        }
+        .gear-cta-btn.flagship-btn:hover {
+            background-color: var(--ink);
+            color: var(--paper);
+        }
+
+        .result-bottom-sticker {
+            position: absolute;
+            bottom: -15px;
+            right: 22px;
+            padding: 3px 14px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+        }
+
+        /* 結果頁底部三個大按鈕 */
+        .result-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+        @media (min-width: 640px) {
+            .result-actions-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .action-big-btn {
+            padding: 14px 16px;
+            font-size: 0.96rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* 企劃理念彈窗 */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-color: rgba(17, 17, 17, 0.62);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+        }
+        .modal-card {
+            width: 100%;
+            max-width: 560px;
+            padding: 32px 26px 26px;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--ink);
+            background-color: var(--cream);
+            font-family: var(--font-mono);
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .modal-close:hover {
+            background-color: var(--coral);
+            color: var(--paper);
+        }
+        .brief-item {
+            padding: 12px 14px;
+            background-color: var(--cream);
+            border: 2px solid var(--ink);
+            margin-bottom: 10px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+        .brief-item-title {
+            font-family: var(--font-mono);
+            font-weight: 800;
+            color: var(--coral);
+            margin-bottom: 4px;
+        }
+
+        /* 頁尾與 Toast */
+        .site-footer {
+            width: 100%;
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 14px 20px 18px;
+            z-index: 10;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: rgba(17, 17, 17, 0.72);
+        }
+        .toast-box {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 60;
+            background-color: var(--ink);
+            color: var(--paper);
+            border: 2px solid var(--mint);
+            box-shadow: 4px 4px 0px var(--coral);
+            padding: 10px 20px;
+            font-family: var(--font-mono);
+            font-weight: 800;
+            font-size: 0.85rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .toast-box.show {
+            opacity: 1;
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(2deg); }
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-pop {
+            animation: popIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 背景大型純白有機圓弧色塊 -->
+    <svg class="bg-blob" viewBox="0 0 1440 900" preserveAspectRatio="none">
+        <path d="M-80,260 C120,120 380,40 530,210 C670,370 620,660 880,790 C1060,880 1290,820 1500,870 L1500,960 L-80,960 Z" fill="#FFFFFF"/>
+    </svg>
+
+    <!-- 頂部極簡導航 -->
+    <header class="site-header">
+        <div class="brand-badge">
+            <span class="brand-tag">LOGI × CAMPUS</span>
+            <span>{ 脆皮大學生生存檢測 }</span>
+        </div>
+
+        <button type="button" onclick="togglePlanModal(true)" class="press-btn btn-white" style="padding: 6px 14px; font-family: var(--font-mono); font-size: 0.85rem;">
+            { 企劃理念 }
+        </button>
+    </header>
+
+    <!-- 主互動舞台 -->
+    <main class="main-stage">
+
+        <!-- ==========================================
+             VIEW 1: 首頁封面
+             ========================================== -->
+        <section id="view-hero" class="hero-wrap animate-pop">
+            <div class="hero-grid">
+                <div class="hero-left">
+                    <div class="double-window hero-window">
+                        <div class="sticker-coral hero-top-sticker">各位醒醒！</div>
+
+                        <!-- 右上角飄浮捲軸報告圖示 -->
+                        <div class="hero-scroll-icon">
+                            <svg viewBox="0 0 90 80" fill="none" style="width:100%;height:100%;overflow:visible;">
+                                <path d="M18 12 H74 C78 12 80 15 80 19 C80 23 77 25 74 25 V64 H18 V19 C18 15 15 12 12 12 C9 12 7 15 7 19 C7 22 10 24 14 24 H18" fill="#FFFFFF" stroke="#111111" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                                <rect x="27" y="25" width="26" height="6" fill="#F26D50" stroke="#111111" stroke-width="2"/>
+                                <rect x="27" y="37" width="22" height="6" fill="#F26D50" stroke="#111111" stroke-width="2"/>
+                                <rect x="27" y="49" width="38" height="6" fill="#69D2CD" stroke="#111111" stroke-width="2"/>
+                            </svg>
+                        </div>
+
+                        <div class="hero-bracket-sub">{ 輪到 }</div>
+                        <h1 class="hero-title">本脆皮大學生</h1>
+                        <p class="hero-desc">
+                            早八趕報告、圖書館搶插座、咖啡廳佔位剪片，還是半夜宿舍開黑？<br>
+                            4 題測出你的脆皮指數，解鎖同品項平價 vs. 旗艦 <span>Logitech 續命神隊友</span>！
+                        </p>
+
+                        <div class="sticker-mint hero-bottom-sticker">找神隊友了</div>
+                    </div>
+
+                    <div class="hero-actions">
+                        <button type="button" onclick="startQuiz()" class="press-btn btn-coral start-btn">
+                            <span>測驗開始</span>
+                            <span style="font-family: var(--font-mono);">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 手繪抱筆電脆皮大學生插畫 -->
+                <div class="hero-right">
+                    <div class="hero-char-box">
+                        <svg viewBox="0 0 340 360" fill="none" style="width:100%;height:auto;">
+                            <path d="M62 118 C62 118 54 131 54 137 C54 142 58 145 62 145 C66 145 70 142 70 137 C70 131 62 118 62 118 Z" fill="#69D2CD" stroke="#111111" stroke-width="2.5"/>
+                            <path d="M46 148 C46 148 41 156 41 160 C41 163 43.5 165 46 165 C48.5 165 51 163 51 160 C51 156 46 148 46 148 Z" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
+                            <circle cx="242" cy="64" r="34" fill="#111111"/>
+                            <path d="M214 82 Q232 94 252 78" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M148 64 Q138 38 158 26 Q152 46 162 60" fill="#111111"/>
+                            <path d="M168 58 Q174 36 188 34 Q180 48 180 58" fill="#111111"/>
+                            <path d="M96 155 C94 92 135 55 182 55 C232 55 266 95 264 162 C263 196 254 222 246 232 L106 232 C98 214 96 185 96 155 Z" fill="#111111"/>
+                            <path d="M114 132 C114 96 142 78 178 78 C214 78 242 98 242 136 C242 178 214 206 176 206 C138 206 114 178 114 132 Z" fill="#FFFFFF" stroke="#111111" stroke-width="3"/>
+                            <path d="M112 142 C118 116 148 92 174 82 C164 106 144 128 114 148 Z" fill="#111111"/>
+                            <path d="M174 82 C196 98 222 118 244 140 C244 104 216 76 174 82 Z" fill="#111111"/>
+                            <path d="M240 136 C258 132 268 146 262 164 C257 178 244 180 237 172" fill="#FDECE8" stroke="#111111" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M245 148 Q255 148 253 160 M246 155 L252 155" stroke="#111111" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M122 158 Q176 146 230 158 Q232 175 218 179 Q176 172 134 179 Q120 175 122 158 Z" fill="#F7C6BE"/>
+                            <path d="M132 122 Q146 116 158 112" stroke="#111111" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M218 122 Q204 116 192 112" stroke="#111111" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M170 116 Q175 121 180 116" stroke="#111111" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="146" cy="140" r="16" fill="#FFFFFF" stroke="#111111" stroke-width="3"/>
+                            <circle cx="143" cy="141" r="4.5" fill="#111111"/>
+                            <circle cx="204" cy="140" r="16" fill="#FFFFFF" stroke="#111111" stroke-width="3"/>
+                            <circle cx="201" cy="141" r="4.5" fill="#111111"/>
+                            <g stroke="#F26D50" stroke-width="2.5" stroke-linecap="round">
+                                <line x1="126" y1="163" x2="122" y2="173"/>
+                                <line x1="134" y1="163" x2="130" y2="173"/>
+                                <line x1="142" y1="163" x2="138" y2="173"/>
+                                <line x1="150" y1="163" x2="146" y2="173"/>
+                                <line x1="202" y1="163" x2="198" y2="173"/>
+                                <line x1="210" y1="163" x2="206" y2="173"/>
+                                <line x1="218" y1="163" x2="214" y2="173"/>
+                                <line x1="226" y1="163" x2="222" y2="173"/>
+                            </g>
+                            <path d="M150 185 Q158 177 166 185 Q175 192 184 185 Q192 177 200 185" stroke="#111111" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+                            <path d="M126 226 C126 212 238 212 252 236 L278 338 L138 338 Z" fill="#111111"/>
+                            <path d="M236 254 C264 274 274 306 254 322 C236 336 184 324 156 316 C144 312 146 296 160 298 L218 302" fill="#FFFFFF" stroke="#111111" stroke-width="3" stroke-linecap="round"/>
+                            <line x1="138" y1="286" x2="148" y2="292" stroke="#F26D50" stroke-width="2.5" stroke-linecap="round"/>
+                            <line x1="135" y1="295" x2="146" y2="300" stroke="#F26D50" stroke-width="2.5" stroke-linecap="round"/>
+                            <polygon points="34,218 144,218 164,336 54,336" fill="#D4D4D4" stroke="#111111" stroke-width="3" stroke-linejoin="round"/>
+                            <circle cx="99" cy="276" r="14" fill="#FFFFFF" stroke="#111111" stroke-width="2.8"/>
+                            <line x1="54" y1="336" x2="224" y2="336" stroke="#111111" stroke-width="4" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 2: 測驗問答頁
+             ========================================== -->
+        <section id="view-quiz" class="quiz-wrap hidden">
+            <div class="double-window quiz-window">
+                <div class="sticker-coral quiz-top-sticker" id="quiz-tag">{ Q1 // 早八報告死線 }</div>
+
+                <div class="quiz-meta">
+                    <span>CRISP-INDEX DIAGNOSTIC</span>
+                    <span>STEP <span id="quiz-step" style="color: var(--coral); font-size: 1rem;">01</span> / 04</span>
+                </div>
+
+                <div class="step-bars">
+                    <div id="step-bar-1" class="step-bar active"></div>
+                    <div id="step-bar-2" class="step-bar"></div>
+                    <div id="step-bar-3" class="step-bar"></div>
+                    <div id="step-bar-4" class="step-bar"></div>
+                </div>
+
+                <h2 id="question-title" class="question-title">題目載入中...</h2>
+
+                <div id="options-list" class="options-list"></div>
+
+                <div class="quiz-footer">
+                    <button type="button" id="btn-prev" onclick="prevQuestion()" class="press-btn btn-cream" style="padding: 6px 14px; font-family: var(--font-mono); font-size: 0.8rem;">
+                        ← 上一題
+                    </button>
+                    <span style="color: rgba(17,17,17,0.6);">{ 點擊選項自動下一題 }</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 3: 結果檢測報告頁 (同品項平價 vs 旗艦雙卡對決)
+             ========================================== -->
+        <section id="view-result" class="result-wrap hidden animate-pop">
+            <div class="double-window result-window">
+                <div class="sticker-coral result-top-sticker">檢測報告出爐 // REPORT</div>
+
+                <div class="crisp-badge-row">
+                    <span class="crisp-badge">脆皮危險指數：<span id="res-crisp-score" style="color: var(--coral);">88%</span></span>
+                </div>
+
+                <!-- 上半部：左側人格標題與解析 + 右側專屬手繪角色插畫 -->
+                <div class="result-top-grid">
+                    <div>
+                        <div class="res-subtitle" id="res-subtitle">{ TYPE-01 // 靜音守護型 }</div>
+                        <h2 class="res-title" id="res-title">{ 圖書館・靜音潛水特務型 }</h2>
+                        <div class="res-tags" id="res-tags"></div>
+                        <p class="res-desc" id="res-desc">人格解析載入中...</p>
+                    </div>
+
+                    <div>
+                        <div class="res-char-frame" id="res-character-svg"></div>
+                    </div>
+                </div>
+
+                <!-- 下半部：同品項「學生高 CP 值入門款 vs. 旗艦頂規神隊友」對決區 -->
+                <div class="gear-section">
+                    <div class="gear-header">
+                        <span class="sticker-mint" style="padding: 4px 14px; font-size: 0.88rem;">
+                            命定 Logitech 神隊友（同品項升級對決）
+                        </span>
+                        <span class="gear-compare-badge" id="res-compare-category">
+                            { MOUSE SHOWDOWN // 滑鼠對決 }
+                        </span>
+                    </div>
+
+                    <div class="gear-cards-grid" id="gear-cards-container">
+                        <!-- JS 動態生成兩張同品項對決卡片 -->
+                    </div>
+                </div>
+
+                <div class="sticker-mint result-bottom-sticker">{ 點擊商品可直達台灣 Logitech 官方介紹頁 }</div>
+            </div>
+
+            <!-- 底部三個行動按鈕 -->
+            <div class="result-actions-grid">
+                <button type="button" onclick="downloadStoryPoster()" class="press-btn btn-coral action-big-btn">
+                    <span>↓ 下載 IG 限動海報</span>
+                </button>
+                <button type="button" onclick="copyResultText()" class="press-btn btn-white action-big-btn">
+                    <span>❐ 複製測驗結果與連結</span>
+                </button>
+                <button type="button" onclick="restartQuiz()" class="press-btn btn-cream action-big-btn">
+                    <span>↺ 再測一次</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 隱藏的 HTML5 Canvas：即時生成 1080x1920 雙層復古視窗 IG 限動海報 -->
+    <canvas id="story-canvas" width="1080" height="1920" class="hidden"></canvas>
+
+    <!-- 企劃理念彈窗 -->
+    <div id="plan-modal" class="modal-backdrop hidden">
+        <div class="double-window modal-card animate-pop">
+            <div class="sticker-coral" style="position:absolute;top:-16px;left:24px;padding:4px 14px;font-family:var(--font-mono);font-size:0.82rem;">
+                { 企劃理念 // CAMPAIGN BRIEF }
+            </div>
+            <button type="button" onclick="togglePlanModal(false)" class="modal-close">✕</button>
+
+            <h3 style="font-size:1.35rem;font-weight:900;margin:8px 0 14px;">
+                《脆皮大學生生存檢測》校園推廣企劃
+            </h3>
+
+            <div class="brief-item">
+                <div class="brief-item-title">01 // 受眾洞察與迷因共鳴</div>
+                <p>以大學生社群最愛自嘲的「脆皮大學生（早八趕報告、圖書館搶插座、宿舍開黑）」切入，用手繪插畫風格拉近距離，消除 3C 規格的生硬感。</p>
+            </div>
+
+            <div class="brief-item">
+                <div class="brief-item-title">02 // 同品項精準導購</div>
+                <p>針對四種校園人格提供「同品項高 CP 值學生入門款 vs. 旗艦頂規神隊友」對照，並直連台灣 Logitech / Logitech G 官方產品介紹頁，兼顧創意內容擴散與校園商務轉換！</p>
+            </div>
+
+            <div style="display:flex;justify-content:flex-end;">
+                <button type="button" onclick="togglePlanModal(false)" class="press-btn btn-mint" style="padding:8px 18px;font-size:0.88rem;">
+                    我知道了 ✓
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 頁尾創作者署名 -->
+    <footer class="site-footer">
+        <div>Illustration &amp; Code by <span style="color:var(--ink);font-weight:800;">楊淯鳳</span>｜淡江大學資工系</div>
+        <div>{ LOGITECH CAMPUS AMBASSADOR 2026 }</div>
+    </footer>
+
+    <!-- Toast 提示訊息 -->
+    <div id="toast" class="toast-box">
+        <span id="toast-msg">COPIED!</span>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. 台灣大學生情境題庫 (4題)
+        // ==========================================
+        var quizQuestions = [
+            {
+                tag: "{ Q1 // 早八報告死線 }",
+                title: "距離早八小組報告只剩 6 小時，現在的你正在哪裡掙扎？",
+                options: [
+                    { key: "A", text: "躲在圖書館最安靜的角落，連按滑鼠都小心翼翼怕吵到隔壁" },
+                    { key: "B", text: "書桌前灌著大冰美，十個視窗同時開工，游標飛速穿梭趕進度" },
+                    { key: "C", text: "先跟宿舍室友喊一聲「打完這場就做」，順便測試新鍵盤手感" },
+                    { key: "D", text: "挑一間有插座的質感咖啡廳，邊修簡報排版邊配肉桂捲" }
+                ]
+            },
+            {
+                tag: "{ Q2 // 桌面與書包狀態 }",
+                title: "老實說，打開你的隨身包或看向你的書桌，最像哪一種？",
+                options: [
+                    { key: "A", text: "走極簡無聲路線，討厭任何喀噠喀噠的噪音干擾思緒" },
+                    { key: "B", text: "快捷鍵與巨集全設好，能一鍵完成的事絕不點兩下滑鼠" },
+                    { key: "C", text: "鍵盤敲擊手感與觸發速度不能妥協，白天打報告、半夜打遊戲都要夠爽" },
+                    { key: "D", text: "東西一定要輕巧好看，配色跟我的日常穿搭搭起來才順眼" }
+                ]
+            },
+            {
+                tag: "{ Q3 // 分組報告生存術 }",
+                title: "遇到分組報告有人突然消失，你通常會自動變成哪種擔當？",
+                options: [
+                    { key: "A", text: "默默輸出機器：不講廢話，戴上耳機安靜把進度條推滿" },
+                    { key: "B", text: "全能救火隊：把大家的零碎資料一鍵統整成神級報告" },
+                    { key: "C", text: "氣氛與節奏王：語音群組開起來，帶著大家半夜一起衝刺" },
+                    { key: "D", text: "視覺美編擔當：把醜醜的文字版簡報救成雜誌級質感" }
+                ]
+            },
+            {
+                tag: "{ Q4 // 脆皮續命儀式 }",
+                title: "終於把這週的報告交出去了！你的第一件續命儀式是什麼？",
+                options: [
+                    { key: "A", text: "窩在安靜房間裡戴耳機追劇，享受完全不被打擾的獨處時光" },
+                    { key: "B", text: "一鍵關閉所有工作視窗，準時躺平享受效率帶來的自由" },
+                    { key: "C", text: "立刻切換電競模式，揪室友開黑連勝三場慶祝解脫！" },
+                    { key: "D", text: "換間咖啡廳繼續剪生活 Vlog 或修圖，記錄今日份大學日常" }
+                ]
+            }
+        ];
+
+        // ==========================================
+        // 2. 四種脆皮大學生人格結果 + 同品項雙層級神隊友
+        // ==========================================
+        var resultProfiles = {
+            A: {
+                subtitle: "{ TYPE-01 // 靜音守護型 }",
+                title: "{ 圖書館・靜音潛水特務型 }",
+                crispScore: "82%",
+                tags: ["#圖書館安靜區霸主", "#社恐友善模式", "#零噪音狂熱者"],
+                desc: "你在人群中總是低調不張揚，但一戴上耳機、打開文獻，輸出效率簡直像開外掛！你對環境噪音極度敏感，最怕自己的滑鼠點擊聲打破圖書館的寧靜。",
+                compareCategory: "{ MOUSE SHOWDOWN // 靜音滑鼠對決 }",
+                charSvg: '<svg viewBox="0 0 220 220" fill="none" style="width:100%;height:100%;"><rect x="26" y="42" width="54" height="24" fill="#69D2CD" stroke="#111111" stroke-width="2"/><text x="34" y="58" fill="#111111" font-family="monospace" font-weight="bold" font-size="12">SHHH!</text><path d="M68 96 C68 54 172 54 172 96" stroke="#111111" stroke-width="6" fill="none"/><circle cx="154" cy="42" r="20" fill="#111111"/><path d="M72 104 C72 64 96 42 122 42 C148 42 170 64 168 106 L160 150 L78 150 Z" fill="#111111"/><path d="M82 90 C82 66 98 54 120 54 C142 54 158 68 158 92 C158 116 142 134 120 134 C98 134 82 116 82 90 Z" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><path d="M80 94 C86 76 102 62 118 56 C112 72 98 86 80 96 Z" fill="#111111"/><path d="M118 56 C134 64 148 76 158 92 C158 68 140 52 118 56 Z" fill="#111111"/><rect x="64" y="84" width="16" height="34" rx="8" fill="#F26D50" stroke="#111111" stroke-width="2.5"/><rect x="160" y="84" width="16" height="34" rx="8" fill="#F26D50" stroke="#111111" stroke-width="2.5"/><circle cx="102" cy="92" r="8.5" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><circle cx="102" cy="92" r="3.5" fill="#111111"/><circle cx="138" cy="92" r="8.5" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><circle cx="138" cy="92" r="3.5" fill="#111111"/><path d="M84 146 C84 136 154 136 162 152 L174 206 L74 206 Z" fill="#111111"/><rect x="115" y="114" width="10" height="34" rx="5" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/></svg>',
+                budgetGear: {
+                    tierLabel: "學生高 CP 值入門滑鼠",
+                    series: "SILENT MOUSE // 入門靜音首選",
+                    name: "Logitech M650 靜音無線滑鼠",
+                    priceTag: "NT$ 1,090 起・輕巧入門",
+                    desc: "搭載 SilentTouch 技術減少超過 90% 點擊聲，提供中小手與大手雙尺寸選擇，圖書館考前週瘋狂趕報告也不怕吵到隔壁！",
+                    imgSrc: "images/m650.png",
+                    url: "https://www.logitech.com/zh-tw/products/mice/m650-signature-wireless-mouse.html",
+                    fallbackSvg: '<svg viewBox="0 0 110 90" fill="none" style="width:100%;height:100%;"><rect x="36" y="12" width="38" height="66" rx="19" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><line x1="36" y1="38" x2="74" y2="38" stroke="#111111" stroke-width="2"/><rect x="52" y="19" width="6" height="12" rx="3" fill="#69D2CD" stroke="#111111" stroke-width="1.5"/></svg>'
+                },
+                flagshipGear: {
+                    tierLabel: "旗艦頂規神隊友滑鼠",
+                    series: "ERGONOMIC MOUSE // 護腕靜音旗艦",
+                    name: "Logitech LIFT 人體工學垂直滑鼠",
+                    priceTag: "NT$ 2,490 起・人體工學頂規",
+                    desc: "結合 57° 垂直自然握手角度與靜音微動按鍵，專為中小手型打造，長時間寫專題、改論文既安靜又能徹底拯救手腕痠痛！",
+                    imgSrc: "images/lift.png",
+                    url: "https://www.logitech.com/zh-tw/products/mice/lift-vertical-ergonomic-mouse.html",
+                    fallbackSvg: '<svg viewBox="0 0 110 90" fill="none" style="width:100%;height:100%;"><path d="M36 74 C32 42 42 14 58 14 C72 14 80 42 74 74 Z" fill="#69D2CD" stroke="#111111" stroke-width="2.5"/><path d="M52 24 L56 44" stroke="#F26D50" stroke-width="4" stroke-linecap="round"/><ellipse cx="55" cy="74" rx="22" ry="6" fill="#FFFFFF" stroke="#111111" stroke-width="2"/></svg>'
+                }
+            },
+            B: {
+                subtitle: "{ TYPE-02 // 效率續命型 }",
+                title: "{ 咖啡續命・多工狂人型 }",
+                crispScore: "94%",
+                tags: ["#大冰美重度依賴", "#一鍵下班大師", "#十視窗同時開工"],
+                desc: "你是標準的「死線前戰神」！只要咖啡因一到位，大腦跟手指就會進入超頻模式。你最討厭把生命浪費在重複點擊上，高效能滑鼠就是你準時躺平的唯一信仰。",
+                compareCategory: "{ MOUSE SHOWDOWN // 多工滑鼠對決 }",
+                charSvg: '<svg viewBox="0 0 220 220" fill="none" style="width:100%;height:100%;"><path d="M52 108 Q46 96 54 86 M68 106 Q62 94 70 84" stroke="#F26D50" stroke-width="2.5" stroke-linecap="round"/><circle cx="156" cy="42" r="22" fill="#111111"/><path d="M68 102 C68 62 94 38 124 38 C154 38 176 64 174 106 L166 150 L74 150 Z" fill="#111111"/><path d="M80 88 C80 64 98 52 120 52 C142 52 160 66 160 90 C160 116 142 134 120 134 C98 134 80 116 80 88 Z" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><path d="M78 94 C84 76 102 60 118 54 C112 72 98 86 78 96 Z" fill="#111111"/><path d="M118 54 C134 64 148 76 160 92 C160 68 142 50 118 54 Z" fill="#111111"/><path d="M90 78 L108 84 M148 78 L130 84" stroke="#111111" stroke-width="2.8" stroke-linecap="round"/><circle cx="100" cy="92" r="9" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><circle cx="100" cy="92" r="3.5" fill="#F26D50"/><circle cx="138" cy="92" r="9" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><circle cx="138" cy="92" r="3.5" fill="#F26D50"/><path d="M108 116 Q120 110 132 116 Q120 126 108 116 Z" fill="#F26D50" stroke="#111111" stroke-width="2"/><path d="M84 146 C84 136 154 136 162 152 L174 206 L74 206 Z" fill="#111111"/><polygon points="44,124 84,124 78,196 50,196" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><rect x="41" y="116" width="46" height="8" fill="#69D2CD" stroke="#111111" stroke-width="2"/><rect x="47" y="146" width="34" height="22" fill="#F26D50" stroke="#111111" stroke-width="2"/></svg>',
+                budgetGear: {
+                    tierLabel: "學生高 CP 值入門滑鼠",
+                    series: "COMPACT PRO MOUSE // 隨身多工",
+                    name: "Logitech MX Anywhere 3S",
+                    priceTag: "NT$ 2,990 起・隨身高效",
+                    desc: "小巧機身輕鬆塞進書包，配備 MagSpeed 電磁滾輪與 8K DPI 玻璃追蹤技術，從教室課桌到咖啡廳玻璃桌都能精準飛速滑動！",
+                    imgSrc: "images/mx-anywhere-3s.png",
+                    url: "https://www.logitech.com/zh-tw/products/mice/mx-anywhere-3s.html",
+                    fallbackSvg: '<svg viewBox="0 0 110 90" fill="none" style="width:100%;height:100%;"><rect x="37" y="16" width="36" height="58" rx="18" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><rect x="52" y="23" width="6" height="12" rx="3" fill="#69D2CD" stroke="#111111" stroke-width="1.5"/><path d="M44 46 H66" stroke="#111111" stroke-width="2" stroke-linecap="round"/></svg>'
+                },
+                flagshipGear: {
+                    tierLabel: "旗艦頂規神隊友滑鼠",
+                    series: "MASTER SERIES // 生產力滑鼠之王",
+                    name: "Logitech MX Master 3S",
+                    priceTag: "NT$ 3,690 起・旗艦頂規",
+                    desc: "每秒滾動 1,000 行程式碼的電磁滾輪 + 專屬側邊拇指滾輪 + Smart Actions 一鍵巨集，多視窗剪片、寫扣與做報告的終極神器！",
+                    imgSrc: "images/mx-master-3s.png",
+                    url: "https://www.logitech.com/zh-tw/products/mice/mx-master-3s.html",
+                    fallbackSvg: '<svg viewBox="0 0 110 90" fill="none" style="width:100%;height:100%;"><path d="M34 26 C34 14 76 14 76 28 L78 64 C78 76 32 76 32 64 Z" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><rect x="52" y="20" width="6" height="14" rx="3" fill="#F26D50" stroke="#111111" stroke-width="1.5"/><rect x="28" y="40" width="6" height="14" rx="2" fill="#69D2CD" stroke="#111111" stroke-width="1.5"/></svg>'
+                }
+            },
+            C: {
+                subtitle: "{ TYPE-03 // 熱血雙棲型 }",
+                title: "{ 宿舍開黑・熱血切換玩家型 }",
+                crispScore: "89%",
+                tags: ["#白天寫扣晚上開黑", "#機械軸手感控", "#宿舍主戰場MVP"],
+                desc: "誰說脆皮大學生只能苦哈哈趕報告？高壓趕工完跟室友組隊開黑，才是大學生活最熱血的充電時刻！你要求鍵盤能陪你白天高速打字、半夜毫秒級開戰。",
+                compareCategory: "{ KEYBOARD SHOWDOWN // 電競鍵盤對決 }",
+                charSvg: '<svg viewBox="0 0 220 220" fill="none" style="width:100%;height:100%;"><polygon points="44,46 34,68 46,68 38,88 58,64 46,64" fill="#F26D50" stroke="#111111" stroke-width="2"/><polygon points="178,44 168,66 180,66 172,86 192,62 180,62" fill="#69D2CD" stroke="#111111" stroke-width="2"/><circle cx="156" cy="42" r="22" fill="#111111"/><path d="M68 104 C68 62 94 38 124 38 C154 38 176 64 174 106 L166 150 L74 150 Z" fill="#111111"/><path d="M80 88 C80 64 98 52 120 52 C142 52 160 66 160 90 C160 116 142 134 120 134 C98 134 80 116 80 88 Z" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><path d="M78 94 C84 76 102 60 118 54 C112 72 98 86 78 96 Z" fill="#111111"/><path d="M118 54 C134 64 148 76 160 92 C160 68 142 50 118 54 Z" fill="#111111"/><rect x="64" y="84" width="14" height="32" rx="7" fill="#69D2CD" stroke="#111111" stroke-width="2.5"/><path d="M70 114 Q76 132 104 128" stroke="#111111" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="106" cy="128" r="4" fill="#F26D50" stroke="#111111" stroke-width="1.5"/><path d="M90 80 L108 85 M148 80 L130 85" stroke="#111111" stroke-width="2.8" stroke-linecap="round"/><circle cx="100" cy="92" r="9" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><circle cx="100" cy="92" r="4" fill="#111111"/><circle cx="138" cy="92" r="9" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><circle cx="138" cy="92" r="4" fill="#111111"/><path d="M108 112 H132 Q130 124 120 124 Q110 124 108 112 Z" fill="#F26D50" stroke="#111111" stroke-width="2"/><path d="M84 146 C84 136 154 136 162 152 L174 206 L74 206 Z" fill="#111111"/></svg>',
+                budgetGear: {
+                    tierLabel: "學生高 CP 值入門鍵盤",
+                    series: "LOGITECH G // 無線矮軸入門",
+                    name: "Logitech G G515 LIGHTSPEED TKL",
+                    priceTag: "NT$ 4,290 起・超薄無線矮軸",
+                    desc: "22mm 超薄無數字鍵 TKL 省空間設計，不佔宿舍小書桌！搭載 LIGHTSPEED 無線低延遲與雙層消音泡棉，打報告跟打遊戲都俐落順手。",
+                    imgSrc: "images/g515.png",
+                    url: "https://www.logitechg.com/zh-tw/shop/p/g515-tkl-wireless-keyboard.920-012578",
+                    fallbackSvg: '<svg viewBox="0 0 110 90" fill="none" style="width:100%;height:100%;"><rect x="12" y="26" width="86" height="38" rx="4" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><rect x="19" y="33" width="72" height="6" fill="#69D2CD" stroke="#111111" stroke-width="1"/><rect x="19" y="43" width="72" height="6" fill="#111111"/><rect x="28" y="53" width="54" height="6" fill="#111111"/></svg>'
+                },
+                flagshipGear: {
+                    tierLabel: "旗艦頂規神隊友鍵盤",
+                    series: "LOGITECH G FLAGSHIP // 頂級無線機械",
+                    name: "Logitech G G915 X LIGHTSPEED",
+                    priceTag: "NT$ 6,990 起・航空級鋁合金旗艦",
+                    desc: "拉絲航空級鋁合金上蓋 + 升級版 GL 矮軸與 PBT 鍵帽，配備獨立媒體滾輪與可自訂 G 功能鍵，兼具頂級工藝與職業級無線反應速度！",
+                    imgSrc: "images/g915x.png",
+                    url: "https://www.logitechg.com/zh-tw/products/gaming-keyboards/g915-x-wireless-mechanical-gaming-keyboard.html",
+                    fallbackSvg: '<svg viewBox="0 0 110 90" fill="none" style="width:100%;height:100%;"><rect x="8" y="24" width="94" height="42" rx="4" fill="#111111" stroke="#111111" stroke-width="2.5"/><rect x="15" y="32" width="66" height="6" fill="#F26D50"/><rect x="15" y="42" width="66" height="6" fill="#69D2CD"/><rect x="15" y="52" width="66" height="6" fill="#FFFFFF"/><circle cx="91" cy="34" r="5" fill="#F26D50"/></svg>'
+                }
+            },
+            D: {
+                subtitle: "{ TYPE-04 // 質感生活型 }",
+                title: "{ 質感出逃・咖啡廳游牧型 }",
+                crispScore: "76%",
+                tags: ["#不限時咖啡廳雷達", "#桌面配色強迫症", "#打字儀式感滿分"],
+                desc: "就算報告快寫不完，儀式感也絕對不能輸！對你來說，挑一間採光滿分的咖啡廳、擺出一把高顏值鍵盤，就是治癒脆皮大學生心靈的最佳良藥。",
+                compareCategory: "{ KEYBOARD SHOWDOWN // 美學鍵盤對決 }",
+                charSvg: '<svg viewBox="0 0 220 220" fill="none" style="width:100%;height:100%;"><path d="M44 64 L47 72 L55 75 L47 78 L44 86 L41 78 L33 75 L41 72 Z" fill="#F26D50" stroke="#111111" stroke-width="1.5"/><path d="M174 52 L176 58 L182 60 L176 62 L174 68 L172 62 L166 60 L172 58 Z" fill="#69D2CD" stroke="#111111" stroke-width="1.5"/><circle cx="154" cy="44" r="22" fill="#111111"/><path d="M68 104 C68 62 94 38 124 38 C154 38 176 64 174 106 L166 150 L74 150 Z" fill="#111111"/><path d="M80 88 C80 64 98 52 120 52 C142 52 160 66 160 90 C160 116 142 134 120 134 C98 134 80 116 80 88 Z" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><path d="M78 94 C84 76 102 60 118 54 C112 72 98 86 78 96 Z" fill="#111111"/><path d="M118 54 C134 64 148 76 160 92 C160 68 142 50 118 54 Z" fill="#111111"/><circle cx="100" cy="92" r="9.5" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><circle cx="100" cy="92" r="4" fill="#111111"/><circle cx="97" cy="89" r="2" fill="#FFFFFF"/><circle cx="138" cy="92" r="9.5" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><circle cx="138" cy="92" r="4" fill="#111111"/><circle cx="135" cy="89" r="2" fill="#FFFFFF"/><ellipse cx="90" cy="106" rx="7" ry="4" fill="#F7C6BE"/><ellipse cx="148" cy="106" rx="7" ry="4" fill="#F7C6BE"/><path d="M110 114 Q115 120 120 114 Q125 120 130 114" stroke="#111111" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M84 146 C84 136 154 136 162 152 L174 206 L74 206 Z" fill="#111111"/><path d="M54 152 H96 L90 192 H60 Z" fill="#69D2CD" stroke="#111111" stroke-width="2.5"/><path d="M95 160 C106 160 106 178 93 178" stroke="#111111" stroke-width="2.5" fill="none"/></svg>',
+                budgetGear: {
+                    tierLabel: "學生高 CP 值入門鍵盤",
+                    series: "PEBBLE SERIES // 隨身美學藍牙",
+                    name: "Logitech Pebble Keys 2 K380s",
+                    priceTag: "NT$ 1,190 起・輕薄多色",
+                    desc: "超輕薄機身與靜音圓形鍵帽，隨手塞進帆布包就能去咖啡廳！支援 Easy-Switch 一鍵在筆電、iPad 與手機之間無縫切換。",
+                    imgSrc: "images/k380s.png",
+                    url: "https://www.logitech.com/zh-tw/shop/p/pebble-keys-2.920-011747",
+                    fallbackSvg: '<svg viewBox="0 0 110 90" fill="none" style="width:100%;height:100%;"><rect x="12" y="25" width="86" height="40" rx="10" fill="#FFFFFF" stroke="#111111" stroke-width="2.5"/><circle cx="26" cy="37" r="4" fill="#69D2CD" stroke="#111111" stroke-width="1.2"/><circle cx="38" cy="37" r="4" fill="#F26D50" stroke="#111111" stroke-width="1.2"/><circle cx="50" cy="37" r="4" fill="#EDE8DC" stroke="#111111" stroke-width="1.2"/><rect x="22" y="48" width="66" height="9" rx="4" fill="#111111"/></svg>'
+                },
+                flagshipGear: {
+                    tierLabel: "旗艦頂規神隊友鍵盤",
+                    series: "STUDIO SERIES // 潮流復古機械",
+                    name: "Logitech POP Keys 無線機械式鍵盤",
+                    priceTag: "NT$ 2,690 起・復古茶軸機械手感",
+                    desc: "復古打字機圓形鍵帽搭配清脆茶軸機械手感，右側更配備可替換的實體 Emoji 表情快捷鍵，讓你在咖啡廳打字既療癒又吸睛！",
+                    imgSrc: "images/pop-keys.png",
+                    url: "https://www.logitech.com/zh-tw/products/keyboards/pop-keys-wireless-mechanical.html",
+                    fallbackSvg: '<svg viewBox="0 0 110 90" fill="none" style="width:100%;height:100%;"><rect x="10" y="22" width="90" height="46" rx="8" fill="#F26D50" stroke="#111111" stroke-width="2.5"/><circle cx="24" cy="35" r="5" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/><circle cx="38" cy="35" r="5" fill="#69D2CD" stroke="#111111" stroke-width="1.5"/><circle cx="52" cy="35" r="5" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/><circle cx="88" cy="35" r="5" fill="#EDE8DC" stroke="#111111" stroke-width="1.5"/><rect x="20" y="48" width="54" height="10" rx="4" fill="#FFFFFF" stroke="#111111" stroke-width="1.5"/></svg>'
+                }
+            }
+        };
+
+        // ==========================================
+        // 3. 測驗互動邏輯
+        // ==========================================
+        var currentStep = 0;
+        var userAnswers = [];
+        var finalType = 'A';
+
+        function switchView(id) {
+            var views = ['view-hero', 'view-quiz', 'view-result'];
+            for (var i = 0; i < views.length; i++) {
+                document.getElementById(views[i]).classList.add('hidden');
+            }
+            var target = document.getElementById(id);
+            target.classList.remove('hidden');
+            target.classList.remove('animate-pop');
+            void target.offsetWidth;
+            target.classList.add('animate-pop');
+        }
+
+        function startQuiz() {
+            currentStep = 0;
+            userAnswers = [];
+            switchView('view-quiz');
+            renderStep();
+        }
+
+        function renderStep() {
+            var q = quizQuestions[currentStep];
+            document.getElementById('quiz-tag').textContent = q.tag;
+            document.getElementById('quiz-step').textContent = '0' + (currentStep + 1);
+            document.getElementById('question-title').textContent = q.title;
+            document.getElementById('btn-prev').disabled = (currentStep === 0);
+
+            for (var i = 1; i <= 4; i++) {
+                var bar = document.getElementById('step-bar-' + i);
+                if (i <= currentStep + 1) {
+                    bar.classList.add('active');
+                } else {
+                    bar.classList.remove('active');
+                }
+            }
+
+            var list = document.getElementById('options-list');
+            list.innerHTML = '';
+
+            for (var j = 0; j < q.options.length; j++) {
+                (function(opt) {
+                    var isSelected = (userAnswers[currentStep] === opt.key);
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'option-item' + (isSelected ? ' selected' : '');
+                    btn.onclick = function() { selectAnswer(opt.key, btn); };
+
+                    btn.innerHTML =
+                        '<span class="option-key">' + opt.key + '</span>' +
+                        '<span class="option-text">' + opt.text + '</span>';
+                    list.appendChild(btn);
+                })(q.options[j]);
+            }
+        }
+
+        function selectAnswer(key, el) {
+            userAnswers[currentStep] = key;
+            var items = document.querySelectorAll('.option-item');
+            for (var i = 0; i < items.length; i++) {
+                items[i].classList.remove('selected');
+            }
+            el.classList.add('selected');
+
+            setTimeout(function() {
+                if (currentStep < quizQuestions.length - 1) {
+                    currentStep++;
+                    renderStep();
+                } else {
+                    finishQuiz();
+                }
+            }, 220);
+        }
+
+        function prevQuestion() {
+            if (currentStep > 0) {
+                currentStep--;
+                renderStep();
+            }
+        }
+
+        function finishQuiz() {
+            var counts = { A: 0, B: 0, C: 0, D: 0 };
+            for (var i = 0; i < userAnswers.length; i++) {
+                var k = userAnswers[i];
+                if (counts[k] !== undefined) counts[k]++;
+            }
+
+            var max = 0;
+            var winners = [];
+            var keys = ['A', 'B', 'C', 'D'];
+            for (var j = 0; j < keys.length; j++) {
+                var key = keys[j];
+                if (counts[key] > max) {
+                    max = counts[key];
+                    winners = [key];
+                } else if (counts[key] === max) {
+                    winners.push(key);
+                }
+            }
+
+            if (winners.length === 1) {
+                finalType = winners[0];
+            } else {
+                var last = userAnswers[userAnswers.length - 1];
+                finalType = (winners.indexOf(last) !== -1) ? last : winners[0];
+            }
+
+            renderResult(finalType);
+            switchView('view-result');
+        }
+
+        function buildGearCardHtml(gear, isFlagship) {
+            var stickerClass = isFlagship ? 'sticker-coral' : 'sticker-mint';
+            var btnClass = isFlagship ? 'gear-cta-btn flagship-btn' : 'gear-cta-btn';
+            var encodedSvg = encodeURIComponent(gear.fallbackSvg);
+
+            return (
+                '<div class="gear-tier-card">' +
+                    '<div class="' + stickerClass + ' tier-sticker">' + gear.tierLabel + '</div>' +
+                    '<div>' +
+                        '<div class="gear-card-top">' +
+                            '<div class="gear-info">' +
+                                '<div class="gear-series">' + gear.series + '</div>' +
+                                '<h3 class="gear-name">' + gear.name + '</h3>' +
+                                '<span class="gear-price-tag">' + gear.priceTag + '</span>' +
+                            '</div>' +
+                            '<a href="' + gear.url + '" target="_blank" rel="noopener noreferrer" class="gear-visual-link" title="前往台灣 Logitech 官方產品頁">' +
+                                '<img src="' + gear.imgSrc + '" alt="' + gear.name + '" onerror="this.onerror=null;this.src=\'data:image/svg+xml;utf8,' + encodedSvg + '\';">' +
+                            '</a>' +
+                        '</div>' +
+                        '<p class="gear-desc">' + gear.desc + '</p>' +
+                    '</div>' +
+                    '<a href="' + gear.url + '" target="_blank" rel="noopener noreferrer" class="' + btnClass + '">' +
+                        '<span>前往官方產品介紹頁</span>' +
+                        '<span>↗</span>' +
+                    '</a>' +
+                '</div>'
+            );
+        }
+
+        function renderResult(type) {
+            var p = resultProfiles[type];
+            document.getElementById('res-crisp-score').textContent = p.crispScore;
+            document.getElementById('res-subtitle').textContent = p.subtitle;
+            document.getElementById('res-title').textContent = p.title;
+            document.getElementById('res-desc').textContent = p.desc;
+            document.getElementById('res-character-svg').innerHTML = p.charSvg;
+            document.getElementById('res-compare-category').textContent = p.compareCategory;
+
+            var tagsHtml = '';
+            for (var i = 0; i < p.tags.length; i++) {
+                tagsHtml += '<span class="res-tag-pill">' + p.tags[i] + '</span>';
+            }
+            document.getElementById('res-tags').innerHTML = tagsHtml;
+
+            var cardsHtml = buildGearCardHtml(p.budgetGear, false) + buildGearCardHtml(p.flagshipGear, true);
+            document.getElementById('gear-cards-container').innerHTML = cardsHtml;
+        }
+
+        function restartQuiz() {
+            switchView('view-hero');
+        }
+
+        // ==========================================
+        // 4. 複製結果與 HTML5 Canvas 生成 1080x1920 IG 限動海報
+        // ==========================================
+        function showToast(text) {
+            var toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = text;
+            toast.classList.add('show');
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        function copyResultText() {
+            var p = resultProfiles[finalType];
+            var url = window.location.href;
+            var shareStr = '【脆皮大學生生存檢測】我的脆皮指數 ' + p.crispScore + '，測出我是 ' + p.title + '！命定神隊友：' + p.budgetGear.name + ' / ' + p.flagshipGear.name + ' 👉 ' + url;
+
+            var ta = document.createElement('textarea');
+            ta.value = shareStr;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showToast('已複製測驗結果與網址！');
+            } catch (err) {
+                showToast('請直接複製瀏覽器網址分享');
+            }
+            document.body.removeChild(ta);
+        }
+
+        function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
+            var chars = text.split('');
+            var line = '';
+            var curY = y;
+            for (var i = 0; i < chars.length; i++) {
+                var test = line + chars[i];
+                if (ctx.measureText(test).width > maxWidth && i > 0) {
+                    ctx.fillText(line, x, curY);
+                    line = chars[i];
+                    curY += lineHeight;
+                } else {
+                    line = test;
+                }
+            }
+            ctx.fillText(line, x, curY);
+            return curY;
+        }
+
+        function downloadStoryPoster() {
+            try {
+                var p = resultProfiles[finalType];
+                var canvas = document.getElementById('story-canvas');
+                var ctx = canvas.getContext('2d');
+                var W = 1080;
+                var H = 1920;
+
+                // 1. 暖米灰背景與有機純白大圓弧
+                ctx.fillStyle = '#EDE8DC';
+                ctx.fillRect(0, 0, W, H);
+
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath();
+                ctx.moveTo(0, 560);
+                ctx.bezierCurveTo(260, 340, 620, 420, 760, 740);
+                ctx.bezierCurveTo(880, 1020, 820, 1460, 1080, 1660);
+                ctx.lineTo(1080, H);
+                ctx.lineTo(0, H);
+                ctx.closePath();
+                ctx.fill();
+
+                // 2. 頂部刊頭
+                ctx.fillStyle = '#111111';
+                ctx.font = '800 32px "JetBrains Mono", monospace';
+                ctx.fillText('LOGI × CAMPUS // 2026', 85, 125);
+
+                // 3. 雙層錯位黑框白底視窗
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(68, 214, 920, 1510);
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = '#111111';
+                ctx.strokeRect(68, 214, 920, 1510);
+
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(92, 190, 920, 1510);
+                ctx.strokeRect(92, 190, 920, 1510);
+
+                // 4. 上緣壓線標籤
+                ctx.fillStyle = '#F26D50';
+                ctx.fillRect(140, 156, 270, 66);
+                ctx.strokeRect(140, 156, 270, 66);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '900 34px "Noto Sans TC", sans-serif';
+                ctx.fillText('各位醒醒', 198, 201);
+
+                // 右上角捲軸報告小圖示
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(830, 144, 120, 108);
+                ctx.strokeRect(830, 144, 120, 108);
+                ctx.fillStyle = '#F26D50';
+                ctx.fillRect(850, 166, 54, 14);
+                ctx.fillRect(850, 190, 46, 14);
+                ctx.fillStyle = '#69D2CD';
+                ctx.fillRect(850, 214, 80, 14);
+
+                // 5. 大括號副標與脆皮指數
+                ctx.fillStyle = '#111111';
+                ctx.font = '800 34px "JetBrains Mono", monospace';
+                ctx.fillText('{ 輪到本脆皮大學生 }', 145, 300);
+
+                ctx.fillStyle = '#F26D50';
+                ctx.font = '900 32px "Noto Sans TC", sans-serif';
+                ctx.fillText('脆皮指數：' + p.crispScore, 720, 300);
+
+                // 6. 人格主標題
+                ctx.fillStyle = '#111111';
+                ctx.font = '900 60px "Noto Sans TC", sans-serif';
+                ctx.fillText(p.title, 138, 395);
+
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(145, 435);
+                ctx.lineTo(960, 435);
+                ctx.stroke();
+
+                // 7. 標籤貼紙列
+                var tx = 145;
+                ctx.font = '800 25px "JetBrains Mono", monospace';
+                for (var i = 0; i < p.tags.length; i++) {
+                    var tag = p.tags[i];
+                    var tw = ctx.measureText(tag).width + 34;
+                    ctx.fillStyle = '#EDE8DC';
+                    ctx.fillRect(tx, 465, tw, 50);
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(tx, 465, tw, 50);
+                    ctx.fillStyle = '#111111';
+                    ctx.fillText(tag, tx + 17, 498);
+                    tx += tw + 14;
+                }
+
+                // 8. 人格解析內文
+                ctx.fillStyle = '#111111';
+                ctx.font = '700 32px "Noto Sans TC", sans-serif';
+                drawWrappedText(ctx, p.desc, 145, 580, 810, 52);
+
+                // 9. 手繪丸子頭脆皮大學生插畫區塊
+                ctx.fillStyle = '#EDE8DC';
+                ctx.fillRect(145, 795, 815, 250);
+                ctx.lineWidth = 4;
+                ctx.strokeRect(145, 795, 815, 250);
+
+                var cx = 785, cy = 935;
+                ctx.fillStyle = '#111111';
+                ctx.beginPath(); ctx.arc(cx + 50, cy - 72, 30, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(cx, cy - 10, 74, Math.PI, 0); ctx.fill();
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath(); ctx.arc(cx, cy, 62, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                ctx.fillStyle = '#F7C6BE';
+                ctx.fillRect(cx - 46, cy + 6, 92, 20);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.beginPath(); ctx.arc(cx - 24, cy - 8, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                ctx.beginPath(); ctx.arc(cx + 24, cy - 8, 14, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                ctx.fillStyle = '#111111';
+                ctx.beginPath(); ctx.arc(cx - 26, cy - 8, 4.5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(cx + 22, cy - 8, 4.5, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(cx - 22, cy + 32);
+                ctx.quadraticCurveTo(cx - 11, cy + 22, cx, cy + 32);
+                ctx.quadraticCurveTo(cx + 11, cy + 42, cx + 22, cy + 32);
+                ctx.stroke();
+
+                ctx.fillStyle = '#111111';
+                ctx.font = '900 38px "Noto Sans TC", sans-serif';
+                ctx.fillText('早八趕報告？', 180, 885);
+                ctx.fillText('交給神隊友救場！', 180, 945);
+                ctx.font = '800 24px "JetBrains Mono", monospace';
+                ctx.fillStyle = '#F26D50';
+                ctx.fillText(p.compareCategory, 180, 1005);
+
+                // 10. 雙層級神隊友推薦卡 (入門款 vs 旗艦款)
+                // 卡片 A: 學生高 CP 值入門款
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(145, 1105, 815, 245);
+                ctx.lineWidth = 4;
+                ctx.strokeRect(145, 1105, 815, 245);
+
+                ctx.fillStyle = '#69D2CD';
+                ctx.fillRect(175, 1078, 330, 50);
+                ctx.strokeRect(175, 1078, 330, 50);
+                ctx.fillStyle = '#111111';
+                ctx.font = '900 26px "Noto Sans TC", sans-serif';
+                ctx.fillText(p.budgetGear.tierLabel, 198, 1112);
+
+                ctx.fillStyle = '#111111';
+                ctx.font = '900 34px "Noto Sans TC", sans-serif';
+                ctx.fillText(p.budgetGear.name, 178, 1185);
+                ctx.fillStyle = '#444444';
+                ctx.font = '700 24px "Noto Sans TC", sans-serif';
+                drawWrappedText(ctx, p.budgetGear.desc, 178, 1235, 750, 38);
+
+                // 卡片 B: 旗艦頂規神隊友
+                ctx.fillStyle = '#EDE8DC';
+                ctx.fillRect(145, 1400, 815, 245);
+                ctx.lineWidth = 4;
+                ctx.strokeRect(145, 1400, 815, 245);
+
+                ctx.fillStyle = '#F26D50';
+                ctx.fillRect(175, 1373, 310, 50);
+                ctx.strokeRect(175, 1373, 310, 50);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.font = '900 26px "Noto Sans TC", sans-serif';
+                ctx.fillText(p.flagshipGear.tierLabel, 198, 1407);
+
+                ctx.fillStyle = '#111111';
+                ctx.font = '900 34px "Noto Sans TC", sans-serif';
+                ctx.fillText(p.flagshipGear.name, 178, 1480);
+                ctx.fillStyle = '#333333';
+                ctx.font = '700 24px "Noto Sans TC", sans-serif';
+                drawWrappedText(ctx, p.flagshipGear.desc, 178, 1530, 750, 38);
+
+                // 11. 底部創作者署名
+                ctx.fillStyle = '#111111';
+                ctx.font = '800 26px "JetBrains Mono", monospace';
+                ctx.fillText('DESIGNED & CODED BY 楊淯鳳｜淡江大學資工系', 195, 1805);
+
+                var link = document.createElement('a');
+                link.download = '脆皮大學生檢測_' + p.title.replace(/[{}・\s]/g, '') + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+
+                showToast('已下載 IG 限動海報！快去發限動標記室友');
+            } catch (e) {
+                showToast('海報下載失敗，請稍後再試');
+            }
+        }
+
+        // ==========================================
+        // 5. 企劃理念彈窗控制
+        // ==========================================
+        function togglePlanModal(show) {
+            var modal = document.getElementById('plan-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
